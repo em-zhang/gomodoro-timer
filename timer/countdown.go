@@ -4,26 +4,33 @@ import (
 	"os"
 	"fmt"
 	"time"
+	"math"
 )
 
-// Countdown indicates timeleft since the timer started
-func countdown(target time.Time) {
-	fmt.Println("Starting timer ...")
+// Countdown runs a basic time left countdown and shows time left since start
+func Countdown(target time.Time) {
+	fmt.Println("🍅 Starting gomodoro timer ...")
 
-	for range time.Tick(1000 * time.Millisecond) {
+	for range time.Tick(100 * time.Millisecond) {
 		timeLeft := -time.Since(target)
 		if timeLeft < 0 {
-			fmt.Printf("Finished timer %v", 0)
+			fmt.Print("Countdown: ", FormatMins(0), "  \r ")
 			return
 		}
-		timeLeft = time.Duration(timeLeft)
-		fmt.Fprint(os.Stdout, "#: ", formatSeconds(timeLeft))
+		fmt.Fprint(os.Stdout, "Countdown: ", FormatMins(timeLeft), "   \r ")
+		os.Stdout.Sync()
 	}
-	return
+	fmt.Print("hello")
 }
 
-// formatSeconds formats the time durations in seconds
-func formatSeconds(t time.Duration) time.Duration {
-	//return time.Duration(t.Seconds()) * 1000
-	return time.Duration(int64(time.Millisecond) * int64(time.Duration(t.Seconds())))
+// FormatSecs returns proper time left by secs
+func FormatSecs(timeLeft time.Duration) string {
+	return fmt.Sprintf("%02.1f", math.Abs(timeLeft.Seconds()))
+}
+
+// FormatMins returns proper time left by mins
+func FormatMins(timeLeft time.Duration) string {
+	minutes := int(timeLeft.Minutes())
+	seconds := int(timeLeft.Seconds()) % 60
+	return fmt.Sprintf("%d:%02d", minutes, seconds)
 }

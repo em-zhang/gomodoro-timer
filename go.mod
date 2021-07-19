@@ -1,3 +1,3 @@
-module github.com/em-zhang/gomodoro.git
+module github.com/em-zhang/gomodoro
 
 go 1.16
